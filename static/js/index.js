@@ -26,7 +26,7 @@ new Vue({
   mixins: [windowMixin],
   computed: {
     endpoint: function () {
-      return `/lnurlp/api/v1/settings?usr=${this.g.user.id}`
+      return `/lnurldevice/api/v1/settings?usr=${this.g.user.id}`
     }
   },
   data: function () {
