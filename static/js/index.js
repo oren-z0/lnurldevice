@@ -24,11 +24,6 @@ var mapatmpayments = obj => {
 new Vue({
   el: '#vue',
   mixins: [windowMixin],
-  computed: {
-    endpoint: function () {
-      return `/lnurldevice/api/v1/settings?usr=${this.g.user.id}`
-    }
-  },
   data: function () {
     return {
       settings: [
@@ -168,6 +163,9 @@ new Vue({
     }
   },
   computed: {
+    endpoint: function () {
+      return `/lnurldevice/api/v1/settings?usr=${this.g.user.id}`
+    },
     wsMessage: function () {
       return this.websocketMessage
     }
