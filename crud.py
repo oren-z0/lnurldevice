@@ -6,6 +6,7 @@ from fastapi import Request
 from lnbits.db import Database
 from lnbits.helpers import insert_query, update_query, urlsafe_short_hash
 from lnurl import encode as lnurl_encode
+from lnurl.helpers import url_encode
 
 from .models import CreateLnurldevice, Lnurldevice, LnurldevicePayment, LnurldeviceSettings
 
@@ -33,6 +34,10 @@ async def update_lnurldevice_settings(settings: LnurldeviceSettings) -> Lnurldev
 async def delete_lnurldevice_settings() -> None:
     await db.execute("DELETE FROM lnurldevice.settings")
 
+async def url_or_lnurl_encode(url: str) -> str:
+    settings = await get_or_create_lnurldevice_settings()
+    return url_encode(url) if settings.allow_insecure_http else lnurl_encode(url)
+
 
 async def create_lnurldevice(data: CreateLnurldevice, req: Request) -> Lnurldevice:
     if data.device == "pos" or data.device == "atm":
@@ -44,7 +49,7 @@ async def create_lnurldevice(data: CreateLnurldevice, req: Request) -> Lnurldevi
     if isinstance(data.extra, list):
         url = req.url_for("lnurldevice.lnurl_v2_params", device_id=lnurldevice_id)
         for _extra in data.extra:
-            _extra.lnurl = lnurl_encode(
+            _extra.lnurl = await url_or_lnurl_encode(
                 str(url)
                 + f"?pin={_extra.pin}"
                 + f"&amount={_extra.amount}"
@@ -87,7 +92,7 @@ async def update_lnurldevice(
     if isinstance(data.extra, list):
         url = req.url_for("lnurldevice.lnurl_v2_params", device_id=lnurldevice_id)
         for _extra in data.extra:
-            _extra.lnurl = lnurl_encode(
+            _extra.lnurl = await url_or_lnurl_encode(
                 str(url)
                 + f"?pin={_extra.pin}"
                 + f"&amount={_extra.amount}"
@@ -139,7 +144,7 @@ async def get_lnurldevice(lnurldevice_id: str, req: Request) -> Optional[Lnurlde
     if isinstance(device.extra, list):
         url = req.url_for("lnurldevice.lnurl_v2_params", device_id=device.id)
         for _extra in device.extra:
-            _extra.lnurl = lnurl_encode(
+            _extra.lnurl = await url_or_lnurl_encode(
                 str(url)
                 + f"?pin={_extra.pin}"
                 + f"&amount={_extra.amount}"
@@ -170,7 +175,7 @@ async def get_lnurldevices(wallet_ids: List[str], req: Request) -> List[Lnurldev
         if isinstance(device.extra, list):
             url = req.url_for("lnurldevice.lnurl_v2_params", device_id=device.id)
             for _extra in device.extra:
-                _extra.lnurl = lnurl_encode(
+                _extra.lnurl = await url_or_lnurl_encode(
                     str(url)
                     + f"?pin={_extra.pin}"
                     + f"&amount={_extra.amount}"
