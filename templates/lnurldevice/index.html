@@ -17,6 +17,7 @@
         />
       </q-card-section>
     </q-card>
+    {% raw %}
 
     <q-card>
       <q-card-section>
@@ -171,7 +172,6 @@
           :pagination.sync="atmTable.pagination"
           :filter="filter"
         >
-          {% raw %}
           <template v-slot:header="props">
             <q-tr :props="props">
               <q-th style="width: 5%"></q-th>
