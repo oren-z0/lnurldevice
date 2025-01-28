@@ -4,12 +4,34 @@ from typing import List, Optional
 import shortuuid
 from fastapi import Request
 from lnbits.db import Database
-from lnbits.helpers import update_query, urlsafe_short_hash
+from lnbits.helpers import insert_query, update_query, urlsafe_short_hash
 from lnurl import encode as lnurl_encode
 
-from .models import CreateLnurldevice, Lnurldevice, LnurldevicePayment
+from .models import CreateLnurldevice, Lnurldevice, LnurldevicePayment, LnurldeviceSettings
 
 db = Database("ext_lnurldevice")
+
+async def get_or_create_lnurldevice_settings() -> LnurldeviceSettings:
+    row = await db.fetchone("SELECT * FROM lnurldevice.settings LIMIT 1")
+    if row:
+        return LnurldeviceSettings(**row)
+    else:
+        settings = LnurldeviceSettings(allow_insecure_http=False)
+        await db.execute(
+            insert_query("lnurldevice.settings", settings), (*settings.dict().values(),)
+        )
+        return settings
+
+
+async def update_lnurldevice_settings(settings: LnurldeviceSettings) -> LnurldeviceSettings:
+    await db.execute(
+        update_query("lnurldevice.settings", settings, where=""),
+        (*settings.dict().values(),),
+    )
+    return settings
+
+async def delete_lnurldevice_settings() -> None:
+    await db.execute("DELETE FROM lnurldevice.settings")
 
 
 async def create_lnurldevice(data: CreateLnurldevice, req: Request) -> Lnurldevice:

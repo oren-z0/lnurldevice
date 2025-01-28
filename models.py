@@ -4,6 +4,9 @@ from typing import List, Optional, Union
 from lnurl.types import LnurlPayMetadata
 from pydantic import BaseModel, Json
 
+class LnurldeviceSettings(BaseModel):
+    allow_insecure_http: bool | None
+
 
 class LnurldeviceExtra(BaseModel):
     amount: float = 0.0

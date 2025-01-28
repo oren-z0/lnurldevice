@@ -24,8 +24,20 @@ var mapatmpayments = obj => {
 new Vue({
   el: '#vue',
   mixins: [windowMixin],
+  computed: {
+    endpoint: function () {
+      return `/lnurlp/api/v1/settings?usr=${this.g.user.id}`
+    }
+  },
   data: function () {
     return {
+      settings: [
+        {
+          type: 'bool',
+          description: 'Allow insecure http: advance usage only, local domain names encoded in lightning-addresses and lnurls may be broken, and communication may be insecure.',
+          name: 'allow_insecure_http'
+        }
+      ],
       tab: 'mails',
       protocol: window.location.protocol,
       location: window.location.hostname,

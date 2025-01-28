@@ -219,3 +219,15 @@ async def m006_redux(db):
     await db.execute(
         "ALTER TABLE lnurldevice.lnurldevice RENAME COLUMN switches TO extra"
     )
+
+async def m007_add_settings(db):
+    """
+    Add extension settings table
+    """
+    await db.execute(
+        """
+        CREATE TABLE lnurldevice.settings (
+            allow_insecure_http BOOLEAN
+        );
+        """
+    )

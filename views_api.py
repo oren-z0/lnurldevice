@@ -8,6 +8,7 @@ from lnbits.core.models import WalletTypeInfo
 from lnbits.core.services import pay_invoice
 from lnbits.core.views.api import api_lnurlscan
 from lnbits.decorators import (
+    check_admin,
     check_user_extension_access,
     get_key_type,
     require_admin_key,
@@ -27,11 +28,27 @@ from .crud import (
     get_lnurldevices,
     update_lnurldevice,
     update_lnurldevicepayment,
+    get_or_create_lnurldevice_settings,
+    update_lnurldevice_settings,
+    delete_lnurldevice_settings,
 )
 from .helpers import register_atm_payment
-from .models import CreateLnurldevice, Lnurlencode
+from .models import CreateLnurldevice, Lnurlencode, LnurldeviceSettings
 
 lnurldevice_api_router = APIRouter()
+
+@lnurldevice_api_router.get("/api/v1/settings", dependencies=[Depends(check_admin)])
+async def api_get_or_create_settings() -> LnurldeviceSettings:
+    return await get_or_create_lnurldevice_settings()
+
+
+@lnurldevice_api_router.get("/api/v1/settings")
+async def api_update_settings(data: LnurldeviceSettings) -> LnurldeviceSettings:
+    return await update_lnurldevice_settings(data)
+
+@lnurldevice_api_router.delete("/api/v1/settings", dependencies=[Depends(check_admin)])
+async def api_delete_settings() -> None:
+    await delete_lnurldevice_settings()
 
 
 @lnurldevice_api_router.get("/api/v1/currencies")
