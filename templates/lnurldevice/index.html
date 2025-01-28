@@ -4,7 +4,6 @@
   <div class="col-12 col-md-7 q-gutter-y-md">
     <q-card>
       <q-card-section>
-        {% raw %}
         <q-btn
           unelevated
           color="primary"
@@ -172,6 +171,7 @@
           :pagination.sync="atmTable.pagination"
           :filter="filter"
         >
+          {% raw %}
           <template v-slot:header="props">
             <q-tr :props="props">
               <q-th style="width: 5%"></q-th>
