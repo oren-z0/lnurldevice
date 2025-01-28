@@ -42,7 +42,7 @@ async def api_get_or_create_settings() -> LnurldeviceSettings:
     return await get_or_create_lnurldevice_settings()
 
 
-@lnurldevice_api_router.get("/api/v1/settings")
+@lnurldevice_api_router.put("/api/v1/settings")
 async def api_update_settings(data: LnurldeviceSettings) -> LnurldeviceSettings:
     return await update_lnurldevice_settings(data)
 
