@@ -113,7 +113,9 @@
               <q-td>
                 <q-btn
                   v-if="props.row.device == 'switch'"
-                  :disable="{% if allow_insecure_http %}false{% else %}protocol == 'http:'{% endif %}"
+                  {% if not allow_insecure_http %}
+                  :disable="protocol == 'http:'"
+                  {% endif %}
                   flat
                   unelevated
                   dense
@@ -121,7 +123,11 @@
                   icon="visibility"
                   :color="($q.dark.isActive) ? 'grey-7' : 'grey-5'"
                   @click="openQrCodeDialog(props.row.id)"
-                  ><q-tooltip v-if="{% if allow_insecure_http %}false{% else %}protocol == 'http:'{% endif %}">
+                  ><q-tooltip
+                    {% if not allow_insecure_http %}
+                    v-if="protocol == 'http:'"
+                    {% endif %}
+                  >
                     LNURLs only work over HTTPS </q-tooltip
                   ><q-tooltip v-else> view LNURLS </q-tooltip></q-btn
                 >
