@@ -17,7 +17,7 @@ from lnurl import decode as lnurl_decode
 from lnurl import encode as lnurl_encode
 from loguru import logger
 
-from .crud import get_lnurldevice, get_lnurldevicepayment
+from .crud import get_lnurldevice, get_lnurldevicepayment, get_or_create_lnurldevice_settings
 from .helpers import register_atm_payment, xor_decrypt
 
 lnurldevice_generic_router = APIRouter()
@@ -29,9 +29,10 @@ def lnurldevice_renderer():
 
 @lnurldevice_generic_router.get("/", response_class=HTMLResponse)
 async def index(request: Request, user: User = Depends(check_user_exists)):
+    settings = await get_or_create_lnurldevice_settings()
     return lnurldevice_renderer().TemplateResponse(
         "lnurldevice/index.html",
-        {"request": request, "user": user.dict()},
+        {"request": request, "user": user.dict(), "allow_insecure_http": settings.allow_insecure_http},
     )
 
 
