@@ -17,7 +17,6 @@
         />
       </q-card-section>
     </q-card>
-    {% raw %}
 
     <q-card>
       <q-card-section>
@@ -66,7 +65,7 @@
                 auto-width
               >
                 <div v-if="col.name == 'id'"></div>
-                <div v-else>{{ col.label }}</div>
+                <div v-else>{% raw %}{{ col.label }}{% endraw %}</div>
               </q-th>
               <!-- <q-th auto-width></q-th> -->
             </q-tr>
@@ -139,7 +138,7 @@
                 auto-width
               >
                 <div v-if="col.name == 'id'"></div>
-                <div v-else>{{ col.value }}</div>
+                <div v-else>{% raw %}{{ col.value }}{% endraw %}</div>
               </q-td>
             </q-tr>
           </template>
@@ -189,7 +188,7 @@
                 auto-width
               >
                 <div v-if="col.name == 'id'"></div>
-                <div v-else>{{ col.label }}</div>
+                <div v-else>{% raw %}{{ col.label }}{% endraw %}</div>
               </q-th>
               <!-- <q-th auto-width></q-th> -->
             </q-tr>
@@ -228,11 +227,10 @@
                 auto-width
               >
                 <div v-if="col.name == 'id'"></div>
-                <div v-else>{{ col.value }}</div>
+                <div v-else>{% raw %}{{ col.value }}{% endraw %}</div>
               </q-td>
             </q-tr>
           </template>
-          {% endraw %}
         </q-table>
       </q-card-section>
     </q-card>
