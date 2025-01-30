@@ -122,14 +122,18 @@
                   icon="visibility"
                   :color="($q.dark.isActive) ? 'grey-7' : 'grey-5'"
                   @click="openQrCodeDialog(props.row.id)"
-                  ><q-tooltip
-                    {% if not allow_insecure_http %}
-                    v-if="protocol == 'http:'"
-                    {% endif %}
                   >
-                    LNURLs only work over HTTPS </q-tooltip
-                  ><q-tooltip v-else> view LNURLS </q-tooltip></q-btn
-                >
+                  {% if allow_insecure_http %}
+                    <q-tooltip> view LNURLS </q-tooltip>
+                  {% else %}
+                    <q-tooltip
+                      v-if="protocol == 'http:'"
+                    >
+                      LNURLs only work over HTTPS </q-tooltip
+                    >
+                    <q-tooltip v-else> view LNURLS </q-tooltip>
+                  {% endif %}
+                </q-btn>
               </q-td>
               <q-td
                 v-for="col in props.cols"
